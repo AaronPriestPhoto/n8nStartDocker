@@ -1,0 +1,34 @@
+# Environment variables
+.env
+
+# Windows shortcuts and temporary files
+*.url
+*.lnk
+Pruning
+
+# Docker volumes and data
+n8n_data/
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Logs
+*.log
+logs/
+
+# Temporary files
+*.tmp
+*.temp
