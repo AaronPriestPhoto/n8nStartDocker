@@ -1,11 +1,14 @@
 # n8n Docker Setup
 
-A simple Docker Compose setup for running n8n (workflow automation tool) with an easy-to-use Windows batch script for management.
+A simple Docker Compose setup for running [n8n](https://n8n.io) (workflow automation tool) with an easy-to-use Windows batch script for management.
+
+> **Note**: This project provides a convenient Docker setup for n8n. For n8n-specific support, documentation, and features, please refer to the [official n8n resources](https://docs.n8n.io).
 
 ## Features
 
-- **Docker Compose**: Simple container orchestration for n8n
-- **Windows Batch Script**: Easy management with `n8n.bat`
+- **Docker Compose**: Simple container orchestration using the official [n8n Docker image](https://hub.docker.com/r/n8nio/n8n)
+- **Windows Batch Script**: Easy management with `n8n.bat` - automatically starts Docker if needed
+- **Auto-update**: Pulls latest n8n image and starts/updates containers
 - **Persistent Data**: Docker volumes ensure your workflows are saved
 - **Auto-restart**: Container restarts automatically unless stopped manually
 
@@ -34,18 +37,25 @@ A simple Docker Compose setup for running n8n (workflow automation tool) with an
 Create a `.env` file in the project root with your n8n settings. Example:
 
 ```env
-# Basic n8n configuration
-N8N_BASIC_AUTH_ACTIVE=true
-N8N_BASIC_AUTH_USER=admin
-N8N_BASIC_AUTH_PASSWORD=your_secure_password
+# Timezone
+TZ=America/New_York
+GENERIC_TIMEZONE=America/New_York
 
-# Optional settings
-N8N_HOST=localhost
-N8N_PORT=5678
-N8N_PROTOCOL=http
-N8N_EDITOR_BASE_URL=http://localhost:5678/
+# Encryption key (make this a random 32+ char string and keep it safe)
+N8N_ENCRYPTION_KEY="your_random_32_plus_character_string_here"
 
-# Database (optional - defaults to SQLite)
+# Optional: Basic authentication
+# N8N_BASIC_AUTH_ACTIVE=true
+# N8N_BASIC_AUTH_USER=admin
+# N8N_BASIC_AUTH_PASSWORD=your_secure_password
+
+# Optional: Custom host/port settings
+# N8N_HOST=localhost
+# N8N_PORT=5678
+# N8N_PROTOCOL=http
+# N8N_EDITOR_BASE_URL=http://localhost:5678/
+
+# Optional: Database (defaults to SQLite if not specified)
 # N8N_DATABASE_TYPE=postgresdb
 # N8N_DATABASE_POSTGRESDB_HOST=postgres
 # N8N_DATABASE_POSTGRESDB_PORT=5432
@@ -113,6 +123,15 @@ Your n8n workflows, credentials, and settings are stored in a Docker volume name
 ### Permission issues
 - Run the batch script as Administrator if you encounter permission errors
 - Check Docker Desktop settings for file sharing permissions
+
+## Support
+
+- **This Docker setup**: Open an issue in this repository for problems with the Docker configuration or batch script
+- **n8n application**: For n8n-specific questions, features, or bugs, visit:
+  - [Official n8n Documentation](https://docs.n8n.io)
+  - [n8n Community Forum](https://community.n8n.io)
+  - [n8n GitHub Repository](https://github.com/n8n-io/n8n)
+  - [Official n8n Docker Hub](https://hub.docker.com/r/n8nio/n8n)
 
 ## License
 
