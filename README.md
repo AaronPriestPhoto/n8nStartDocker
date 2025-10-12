@@ -16,7 +16,7 @@ A simple Docker Compose setup for running [n8n](https://n8n.io) (workflow automa
 
 1. **Clone this repository**:
    ```bash
-   git clone <your-repo-url>
+   git clone https://github.com/AaronPriestPhoto/n8nStartDocker.git
    cd n8nStartDocker
    ```
 
