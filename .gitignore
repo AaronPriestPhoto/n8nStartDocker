@@ -9,6 +9,10 @@ Pruning
 # Docker volumes and data
 n8n_data/
 
+# Backup files (should stay local)
+n8n_backup_*.tar.gz
+*.backup
+
 # OS generated files
 .DS_Store
 .DS_Store?
