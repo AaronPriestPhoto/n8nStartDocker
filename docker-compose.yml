@@ -7,6 +7,9 @@ services:
       - "5678:5678"
     env_file:
       - .env
+    environment:
+      - GENERIC_TIMEZONE=Etc/UTC
+      - TZ=Etc/UTC
     volumes:
       - n8n_data:/home/node/.n8n
 volumes:

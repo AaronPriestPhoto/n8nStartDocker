@@ -6,14 +6,14 @@ set "TITLE=n8n"
 echo ==============================================
 echo %TITLE% - Docker controls
 echo ==============================================
-echo [U] Update/Start (no downtime)
+echo [U] Backup + Update/Start (no downtime)
 echo [D] Shut Down (docker compose down)
 echo [Q] Quit
 echo(
 set /p "CHOICE=Choose an option [U/D/Q]: "
 if /i "%CHOICE%"=="Q" popd & exit /b 0
 
-REM Ensure Docker is up (for U/D)
+REM Ensure Docker is running
 docker info >nul 2>&1
 if errorlevel 1 (
     echo Docker not ready. Starting Docker Desktop...
@@ -42,8 +42,22 @@ pause
 exit /b 1
 
 :update_start
+rem === Create safe timestamp (cross-version Windows) ===
+for /f %%i in ('powershell -NoProfile -Command "(Get-Date).ToString(\"yyyyMMdd_HHmm\")"') do set stamp=%%i
+
 echo(
-echo === %TITLE%: Pulling latest images ===
+echo === %TITLE%: Creating volume backup before update ===
+docker run --rm -v n8n_data:/data -v "%CD%:/backup" busybox sh -c "tar czf /backup/n8n_backup_%stamp%.tar.gz /data"
+
+if exist "n8n_backup_%stamp%.tar.gz" (
+    echo Backup file created: n8n_backup_%stamp%.tar.gz
+) else (
+    echo [ERROR] Backup file missing! Aborting update.
+    pause & popd & exit /b 1
+)
+
+echo(
+echo === %TITLE%: Pulling latest n8n image ===
 docker compose pull || (echo [ERROR] pull failed & pause & popd & exit /b 1)
 
 echo(
@@ -66,10 +80,4 @@ exit /b 0
 :down_all
 echo(
 echo === %TITLE%: Shutting down compose project (docker compose down) ===
-docker compose down || (echo [ERROR] down failed & pause & popd & exit /b 1)
-echo(
-echo NOTE: Volumes/images are kept. To remove volumes too, run:
-echo   docker compose down -v
-popd
-pause
-exit /b 0
+docker compose down || (echo [ERROR] down
