@@ -24,6 +24,17 @@ if not exist "%backupfile%" (
     pause & popd & exit /b 1
 )
 
+echo -> Verifying backup integrity...
+tar -tzf "%backupfile%" >nul 2>&1 || (
+    echo [ERROR] Backup archive appears corrupted. Aborting restore.
+    pause & popd & exit /b 1
+)
+
+docker volume inspect n8n_data >nul 2>&1 || (
+    echo -> Volume not found. Creating new n8n_data volume...
+    docker volume create n8n_data >nul
+)
+
 echo(
 echo === %TITLE%: Confirm restore from %backupfile% ===
 echo This will overwrite your current n8n data volume!
@@ -45,10 +56,15 @@ echo(
 echo === %TITLE%: Restarting containers ===
 docker compose up -d || (echo [ERROR] Failed to start containers & pause & popd & exit /b 1)
 
+echo -> Removing dangling containers/images...
+docker system prune -f >nul 2>&1
+
 echo(
 echo === %TITLE%: Done! Opening dashboard... ===
 start "" "http://localhost:5678/"
 docker compose ps
+
 popd
+endlocal
 pause
 exit /b 0
