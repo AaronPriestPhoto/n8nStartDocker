@@ -8,6 +8,7 @@ A simple Docker Compose setup for running [n8n](https://n8n.io) (workflow automa
 
 - **Docker Compose**: Simple container orchestration using the official [n8n Docker image](https://hub.docker.com/r/n8nio/n8n)
 - **Windows Batch Script**: Easy management with `n8n.bat` - automatically starts Docker if needed
+- **Auto-backup**: Creates timestamped backups before updates to protect your data
 - **Auto-update**: Pulls latest n8n image and starts/updates containers
 - **Persistent Data**: Docker volumes ensure your workflows are saved
 - **Auto-restart**: Container restarts automatically unless stopped manually
@@ -68,13 +69,14 @@ N8N_ENCRYPTION_KEY="your_random_32_plus_character_string_here"
 
 The `n8n.bat` script provides an easy way to manage your n8n Docker setup:
 
-- **`[U]` Update/Start**: Pulls latest n8n image and starts/updates containers
+- **`[U]` Backup + Update/Start**: Creates a timestamped backup, then pulls latest n8n image and starts/updates containers
 - **`[D]` Shut Down**: Stops all containers (preserves data)
 - **`[Q]` Quit**: Exit the script
 
 The script also:
 - Automatically starts Docker Desktop if needed
 - Waits for Docker Engine to be ready
+- Creates automatic backups before updates (saved as `n8n_backup_YYYYMMDD_HHMM.tar.gz`)
 - Opens the n8n dashboard after starting
 - Shows container status
 
@@ -100,9 +102,25 @@ docker compose up -d
 docker compose down -v
 ```
 
-## Data Persistence
+## Data Persistence & Backups
 
 Your n8n workflows, credentials, and settings are stored in a Docker volume named `n8n_data`. This data persists between container restarts and updates.
+
+### Automatic Backups
+
+The `n8n.bat` script automatically creates timestamped backups before each update:
+- **Backup files**: Saved as `n8n_backup_YYYYMMDD_HHMM.tar.gz`
+- **Location**: Created in the same directory as the script
+- **Contents**: Complete n8n data volume backup
+- **Privacy**: Backup files are kept local-only (not synced to GitHub)
+
+### Restoring from Backup
+
+To restore from a backup file, use the included `restore_n8n.bat` script:
+1. Ensure n8n is stopped: Run `n8n.bat` and choose `[D]`
+2. Run `restore_n8n.bat` and follow the prompts
+3. Select your backup file from the list
+4. The script will restore your data and restart n8n
 
 ## Security Notes
 
